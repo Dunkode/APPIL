@@ -1,7 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import Styles from '../components/StyleComponent'
-import { TextInput, Button } from 'react-native'
+import { TextInput } from 'react-native'
+import { Button, Divider } from '@rneui/base'
+import { TouchableOpacity } from 'react-native'
 
 export default function CadastroUsuario(props) {
 
@@ -9,7 +11,7 @@ export default function CadastroUsuario(props) {
 
   return (
     <View style={Styles.container}>
-      
+
       <View style={Styles.textInputContainer}>
         <Text>CadastroUsuario</Text>
       </View>
@@ -52,11 +54,30 @@ export default function CadastroUsuario(props) {
 
       <View style={Styles.textInputContainer}>
         <Button
-          title='Acessar'
+          title='Cadastrar'
           style={Styles.button}
-          color={"green"}
-          onPress={() => validarCredenciais()} />
+          color='#6CCFB7'
+          titleStyle={{ color: 'black', fontWeight: 'bold' }}
+          buttonStyle={{ borderRadius: 20 }}
+          onPress={() => { }} />
 
+      </View>
+
+      <View style={{ width: "100%" }}>
+        <Divider width={2} color='black' />
+        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <Text>
+            Voltar para a tela de
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => navigation.replace("Login")}
+          >
+            <Text style={{ color: 'blue', fontWeight: 'bold' }}> Login </Text>
+          </TouchableOpacity>
+
+
+        </View>
       </View>
     </View>
   )
