@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native'
 import { Divider } from "@rneui/themed"
 import { Button } from '@rneui/base'
 import { Checkbox } from 'react-native-paper'
+import {validateUser} from "../utils/AuthenticationProvider"
 
 export default function Login(props) {
 
@@ -17,8 +18,7 @@ export default function Login(props) {
   const { navigation } = props
 
   const validarCredenciais = () => {
-    console.log(email)
-    console.log(pass)
+    userData = validateUser(email, pass)
   }
 
 
