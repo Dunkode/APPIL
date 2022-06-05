@@ -1,8 +1,7 @@
 import { useState, useLayoutEffect } from 'react'
 import { View, Text, Alert } from 'react-native'
 import React from 'react'
-import { TextInput } from 'react-native'
-import { TouchableOpacity } from 'react-native'
+import { TextInput, TouchableOpacity } from 'react-native'
 import { Divider } from "@rneui/themed"
 import { Button } from '@rneui/base'
 import { Checkbox } from 'react-native-paper'
