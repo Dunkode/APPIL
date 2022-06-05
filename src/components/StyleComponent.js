@@ -15,6 +15,16 @@ export default StyleSheet.create({
         padding: 3,
         borderRadius: 20,
         maxHeight:70,
+    },
+    textInputInvalid: {
+        flex: 1,
+        backgroundColor: '#d2ece6',
+        margin: 10,
+        padding: 3,
+        maxHeight:70,
+        borderRadius: 20,
+        borderColor: "red",
+        borderWidth:2,
 
     },
     textInputContainer: {

@@ -1,13 +1,15 @@
 import { useState, useLayoutEffect } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import React from 'react'
-import Styles from '../components/StyleComponent'
 import { TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { Divider } from "@rneui/themed"
 import { Button } from '@rneui/base'
 import { Checkbox } from 'react-native-paper'
-import {validateUser} from "../utils/AuthenticationProvider"
+
+import Styles from '../components/StyleComponent'
+import * as AuthenticationProvider from "../utils/AuthenticationProvider" 
+
 
 export default function Login(props) {
 
@@ -17,8 +19,15 @@ export default function Login(props) {
 
   const { navigation } = props
 
-  const validarCredenciais = () => {
-    userData = validateUser(email, pass)
+  const validarCredenciais = async () => {
+    try {
+      let userData = await AuthenticationProvider.validateUser(email, pass)
+      navigation.push("Menu")
+      
+    } catch (error){
+      console.log(error)
+      Alert.alert("Erro ao fazer login: " + error)
+    }
   }
 
 

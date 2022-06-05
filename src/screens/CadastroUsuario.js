@@ -1,16 +1,87 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Styles from '../components/StyleComponent'
 import { TextInput } from 'react-native'
 import { Button, Divider } from '@rneui/base'
+import { Dialog } from '@rneui/themed'
 import { TouchableOpacity } from 'react-native'
+
+import * as AuthenticationProvider from "../utils/AuthenticationProvider"
 
 export default function CadastroUsuario(props) {
 
   const { navigation } = props
 
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [rePassword, setRePassword] = useState("")
+  const [visible, setVisible] = useState(false)
+
+  const [errorMessage, setErrorMessage] = useState([])
+
+
+  const validateInfo = () => {
+    let temErros = false
+    let errorList = []
+
+    if (name == "") {
+      errorList.push({"name":"Informe o seu nome!"})
+      temErros = true
+    }
+
+    if (email == "") {
+      errorList.push({"email":"Informe o seu email!"})
+      temErros = true
+    }
+
+    if (password == "") {
+      errorList.push({"password":"Informe a sua senha!"})
+      temErros = true
+    }
+
+    if (rePassword == "") {
+      errorList.push({"rePassword" : "Informe a reinserção da senha!"})
+      temErros = true
+    }
+
+    if (Object.keys(errorMessage).length >= 0) {
+      temErros = true
+    }
+    
+    if (Object.keys(errorList).length >= 0 ){
+      setErrorMessage(errorList)
+    }
+
+    if (temErros) {
+      console.log("erro->", errorMessage)
+      setVisible(true)
+
+    } else {
+      try {
+        // AuthenticationProvider.createUser(email, password)
+        console.log(errorMessage)
+      } catch (error) {
+        console.log('asdasdasdasd')
+      }
+    }
+  }
+
   return (
     <View style={Styles.container}>
+
+      <Dialog
+        isVisible={visible}
+        onBackdropPress={() => setVisible(!visible)}
+      >
+        <Dialog.Title title="Erro!" />
+        {
+          errorMessage.map((item) => {
+            return (
+              <Text>{Object.values(item)}</Text>
+            )
+          })}
+      </Dialog>
 
       <View style={Styles.textInputContainer}>
         <Text>CadastroUsuario</Text>
@@ -21,32 +92,51 @@ export default function CadastroUsuario(props) {
       <View style={[Styles.textInputContainer]}>
         <TextInput
           placeholder='Insira seu nome completo'
-          // value={email}
-          // onChangeText={(e) => setEmail(e)}
+          onEndEditing={() => {
+            if (name.length < 3) {
+              errorMessage.push ({"Nome": "O nome deve conter mais de 2 dígitos!"})
+              setErrorMessage(errorMessage)
+            }
+          }}
+          value={name}
+          onChangeText={(n) => setName(n)}
           style={Styles.textInput}
 
         />
 
         <TextInput
           placeholder='Insira seu e-mail'
-          secureTextEntry
-          // value={pass}
-          // onChangeText={(p) => setPass(p)}
+          keyboardType="email-address"
+          value={email}
+          onChangeText={(e) => setEmail(e)}
           style={Styles.textInput}
         />
 
         <TextInput
           placeholder='Insira uma senha'
           secureTextEntry
-          // value={pass}
-          // onChangeText={(p) => setPass(p)}
+          value={password}
+          onChangeText={(p) => setPassword(p)}
+          onEndEditing={() => {
+            if (password.length <= 6) {
+              errorMessage.push({"password" : "A senha deve ter no mínimo 6 caracteres!"})
+              setErrorMessage(errorMessage)
+            }
+          }}
           style={Styles.textInput}
         />
+
         <TextInput
           placeholder='Reinsira a senha'
           secureTextEntry
-          // value={pass}
-          // onChangeText={(p) => setPass(p)}
+          value={rePassword}
+          onChangeText={(rp) => setRePassword(rp)}
+          onEndEditing={() => {
+            if (rePassword.length <= 6 || rePassword != password) {
+              errorMessage.push({"rePassword" : "as senhas devem ser iguais!"})
+              setErrorMessage(errorMessage)
+            }
+          }}
           style={Styles.textInput}
         />
 
@@ -59,7 +149,7 @@ export default function CadastroUsuario(props) {
           color='#6CCFB7'
           titleStyle={{ color: 'black', fontWeight: 'bold' }}
           buttonStyle={{ borderRadius: 20 }}
-          onPress={() => { }} />
+          onPress={() => validateInfo()} />
 
       </View>
 
@@ -79,6 +169,7 @@ export default function CadastroUsuario(props) {
 
         </View>
       </View>
+
     </View>
   )
 }

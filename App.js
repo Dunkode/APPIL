@@ -7,6 +7,7 @@ import CadastroUsuario from './src/screens/CadastroUsuario';
 import ListaFarmacias from './src/screens/ListaFarmacias';
 import ListaRemedios from './src/screens/ListaRemedios';
 import PerguntasFrequentes from './src/screens/PerguntasFrequentes';
+import Menu from "./src/screens/Menu";
 
 export default function App() {
   const Stack = createNativeStackNavigator()
@@ -61,6 +62,14 @@ export default function App() {
           component={Sobre}
           options={
             { title: "Sobre" }
+          }
+        />
+
+        <Stack.Screen
+          name='Menu'
+          component={Menu}
+          options={
+            { title: "Menu" }
           }
         />
 
