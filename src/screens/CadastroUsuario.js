@@ -27,22 +27,27 @@ export default function CadastroUsuario(props) {
 
     if (name == "") {
       errorList.push({"name":"Informe o seu nome!"})
-      temErros = true
     }
-
+    if (name.length < 3){
+      errorList.push ({"Nome": "O nome deve conter mais de 2 dígitos!"})
+    }
+    
     if (email == "") {
       errorList.push({"email":"Informe o seu email!"})
-      temErros = true
     }
 
     if (password == "") {
       errorList.push({"password":"Informe a sua senha!"})
-      temErros = true
     }
-
+    if (password.length <= 6) {
+      errorList.push({"password" : "A senha deve ter no mínimo 6 caracteres!"})
+    }
+    
     if (rePassword == "") {
       errorList.push({"rePassword" : "Informe a reinserção da senha!"})
-      temErros = true
+    }
+    if (rePassword.length <= 6 || rePassword != password) {
+      errorList.push({"rePassword" : "as senhas devem ser iguais!"})
     }
 
     if (Object.keys(errorMessage).length >= 0) {
@@ -92,12 +97,6 @@ export default function CadastroUsuario(props) {
       <View style={[Styles.textInputContainer]}>
         <TextInput
           placeholder='Insira seu nome completo'
-          onEndEditing={() => {
-            if (name.length < 3) {
-              errorMessage.push ({"Nome": "O nome deve conter mais de 2 dígitos!"})
-              setErrorMessage(errorMessage)
-            }
-          }}
           value={name}
           onChangeText={(n) => setName(n)}
           style={Styles.textInput}
@@ -117,12 +116,6 @@ export default function CadastroUsuario(props) {
           secureTextEntry
           value={password}
           onChangeText={(p) => setPassword(p)}
-          onEndEditing={() => {
-            if (password.length <= 6) {
-              errorMessage.push({"password" : "A senha deve ter no mínimo 6 caracteres!"})
-              setErrorMessage(errorMessage)
-            }
-          }}
           style={Styles.textInput}
         />
 
@@ -132,10 +125,6 @@ export default function CadastroUsuario(props) {
           value={rePassword}
           onChangeText={(rp) => setRePassword(rp)}
           onEndEditing={() => {
-            if (rePassword.length <= 6 || rePassword != password) {
-              errorMessage.push({"rePassword" : "as senhas devem ser iguais!"})
-              setErrorMessage(errorMessage)
-            }
           }}
           style={Styles.textInput}
         />
