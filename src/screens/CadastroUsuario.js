@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Styles from '../components/StyleComponent'
 import { TextInput } from 'react-native'
-import { Divider, Button } from '@rneui/base'
+import { Divider} from '@rneui/base'
 import { Dialog } from '@rneui/themed'
 import { TouchableOpacity } from 'react-native'
+import { Button } from 'react-native-paper'
 
 import * as AuthenticationProvider from "../utils/AuthenticationProvider"
 
@@ -18,17 +19,16 @@ export default function CadastroUsuario(props) {
   const [rePassword, setRePassword] = useState("")
   const [visible, setVisible] = useState(false)
   const [visibleSucess, setVisibleSucess] = useState(false)
-  const [submitEnable, setSubmitEnable] = useState(false)
+  const [submitDisable, setSubmitDisable] = useState(false)
 
   const [errorMessage, setErrorMessage] = useState([])
 
 
   const validateInfo = async () => {
-    setSubmitEnable(true)
+    setSubmitDisable(true)
     let { temErros, errorList } = verifyTextInputs()
 
     if (temErros) {
-      console.log("erro->", errorMessage)
       setVisible(true)
 
     } else {
@@ -73,11 +73,8 @@ export default function CadastroUsuario(props) {
       errorList.push({ "id": 8, "Confirmação da senha": "As senhas devem ser iguais!" })
     }
 
-    if (errorMessage.length > 0) {
-      temErros = true
-    }
-
     if (errorList.length > 0) {
+      temErros = true
       setErrorMessage(errorList)
     }
 
@@ -92,7 +89,7 @@ export default function CadastroUsuario(props) {
         onBackdropPress={() => {
           setVisible(!visible)
           setErrorMessage([])
-          setSubmitEnable(!submitEnable)
+          setSubmitDisable(!submitDisable)
         }}
       >
         <Dialog.Title title="Erro!" />
@@ -108,7 +105,7 @@ export default function CadastroUsuario(props) {
         isVisible={visibleSucess}
         onBackdropPress={() => {
           navigation.replace("Menu")
-          setSubmitEnable(!submitEnable)
+          setSubmitDisable(!submitDisable)
         }}
       >
         <Dialog.Title title="Sucesso!" />
@@ -116,8 +113,16 @@ export default function CadastroUsuario(props) {
 
       </Dialog>
 
-      <View style={Styles.textInputContainer}>
-        <Text>CadastroUsuario</Text>
+      <View style={Styles.tittleScreen}>
+        <Image
+          source={require("../../assets/logo_appil.png")}
+          style={{
+            width: 250,
+            height: 150,
+            justifyContent: 'center',
+            alignContent: "center"
+          }}
+        />
       </View>
 
 
@@ -156,29 +161,30 @@ export default function CadastroUsuario(props) {
 
       </View>
 
-      <View style={Styles.textInputContainer}>
+      <View style={Styles.textInputContainer}>        
         <Button
-          title='Cadastrar'
-          disabled={submitEnable}
+          disabled={submitDisable}
+          mode="contained"
           style={Styles.button}
+          labelStyle={Styles.textMinor}
           color='#6CCFB7'
-          titleStyle={{ color: 'black', fontWeight: 'bold' }}
-          buttonStyle={{ borderRadius: 20 }}
-          onPress={() => validateInfo()} />
+          onPress={() => validateInfo()} >
+            Cadastrar
+          </Button>
 
       </View>
 
       <View style={{ width: "100%" }}>
         <Divider width={2} color='black' />
         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-          <Text>
+          <Text style={Styles.textMinor}>
             Voltar para a tela de
           </Text>
 
           <TouchableOpacity
             onPress={() => { navigation.replace("Login") }}
           >
-            <Text style={{ color: 'blue', fontWeight: 'bold' }}> Login </Text>
+            <Text style={[Styles.textMinor, { color: 'blue'}]}> Login </Text>
           </TouchableOpacity>
 
 
