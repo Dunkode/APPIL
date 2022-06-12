@@ -1,12 +1,13 @@
 import { useLayoutEffect, useState } from 'react'
 import React from 'react'
-import { View, Text, Alert, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Alert, TextInput, TouchableOpacity, ScrollView,  } from 'react-native'
 import { Divider } from "@rneui/themed"
 import { Button, Checkbox } from 'react-native-paper'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import Styles from '../components/StyleComponent'
 import * as AuthenticationProvider from "../utils/AuthenticationProvider"
+import LogoAppil from '../components/LogoAppil'
 
 
 export default function Login(props) {
@@ -25,7 +26,7 @@ export default function Login(props) {
   const verifyReminder = async () => {
     let persistedEmail = await AsyncStorage.getItem("email")
     let persistedPass = await AsyncStorage.getItem("pass")
-    if (persistedEmail) {
+    if (persistedEmail && persistedPass) {
       setEmail(persistedEmail)
       setPass(persistedPass)
       setChecked(true)
@@ -50,10 +51,10 @@ export default function Login(props) {
     if (email.length > 0 && pass.length > 0) {
       try {
         setSubmitDisable(true)
-        let userData = await AuthenticationProvider.validateUser(email, pass)
-        navigation.push("Menu")
+        await AuthenticationProvider.validateUser(email, pass)
         setSubmitDisable(false)
-        
+        navigation.replace("Menu")
+
       } catch (error) {
         setSubmitDisable(false)
         console.log(error)
@@ -67,29 +68,19 @@ export default function Login(props) {
   }
 
   return (
-    <View style={Styles.container}>
+    <View style={[Styles.container, Styles.centralize]}>
 
-      <View style={Styles.tittleScreen}>
-        <Image
-          source={require("../../assets/logo_appil.png")}
-          style={{
-            width: 250,
-            height: 150,
-            justifyContent: 'center',
-            alignContent: "center"
-          }}
-        />
-      </View>
+      <LogoAppil />
 
-      <View style={Styles.textInputContainer}>
-        <TextInput
-          placeholder='E-mail'
-          value={email}
-          keyboardType="email-address"
-          onChangeText={(e) => setEmail(e)}
-          style={Styles.textInput}
-
-        />
+      <ScrollView style={[Styles.textInputContainer]}>
+          <TextInput
+            placeholder='E-mail'
+            value={email}
+            keyboardType="email-address"
+            onChangeText={(e) => setEmail(e)}
+            style={Styles.textInput}
+            
+            />
 
         <TextInput
           placeholder='Senha'
@@ -97,34 +88,37 @@ export default function Login(props) {
           value={pass}
           onChangeText={(p) => setPass(p)}
           style={Styles.textInput}
-        />
+          />
+
+          <Button
+            mode="contained"
+            style={Styles.button}
+            uppercase={false}
+            labelStyle={Styles.textMinor}
+            color='#6CCFB7'
+            onPress={() => validateCredentials()}
+            disabled={submitDisable}>
+            Acessar
+          </Button>
 
 
-        <Button
-          mode="contained"
-          style={Styles.button}
-          uppercase={false}
-          labelStyle={Styles.textMinor}
-          color='#6CCFB7'
-          onPress={() => validateCredentials()}
-          disabled={submitDisable}>
-          Acessar
-        </Button>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
               setChecked(!checked)
-              reminder()}}
+              reminder()
+            }}
             color="#6CCFB7"
-          />
+            />
           <Text style={Styles.textLarge}>Lembrar-me</Text>
         </View>
 
-      </View>
+      </ScrollView>
 
-      <View style={[Styles.textInEndContainer, { width: "100%" }]}>
+      <View style={Styles.textInEndContainer}
+      >
         <Divider width={2} color='black' />
         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
           <Text style={Styles.textMinor}>
@@ -132,7 +126,7 @@ export default function Login(props) {
           </Text>
 
           <TouchableOpacity
-            onPress={() => navigation.replace("CadastroUsuario")}
+            onPress={() => navigation.push("CadastroUsuario")}
           >
             <Text style={[Styles.textMinor, { color: 'blue' }]}> aqui </Text>
           </TouchableOpacity>

@@ -1,13 +1,15 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Styles from '../components/StyleComponent'
 import { TextInput } from 'react-native'
-import { Divider} from '@rneui/base'
+import { Divider } from '@rneui/base'
 import { Dialog } from '@rneui/themed'
 import { TouchableOpacity } from 'react-native'
 import { Button } from 'react-native-paper'
 
+import Styles from '../components/StyleComponent'
 import * as AuthenticationProvider from "../utils/AuthenticationProvider"
+import * as CrudUserProvider from "../utils/CrudUserProvider"
+import LogoAppil from '../components/LogoAppil'
 
 export default function CadastroUsuario(props) {
 
@@ -33,7 +35,9 @@ export default function CadastroUsuario(props) {
 
     } else {
       try {
+        const data = { "name": name, "email": email }
         let creationResponse = await AuthenticationProvider.createUser(email, password)
+        let creationDocResponse = await CrudUserProvider.createUserDocument(data)
         setVisibleSucess(true)
       } catch (error) {
         errorList.push({ "id": 9, "Resultado": "Ocorreu um erro ao cadastrar o usuário => " + error })
@@ -82,7 +86,7 @@ export default function CadastroUsuario(props) {
   }
 
   return (
-    <View style={Styles.container}>
+    <View style={[Styles.container, Styles.centralize]}>
 
       <Dialog
         isVisible={visible}
@@ -113,21 +117,9 @@ export default function CadastroUsuario(props) {
 
       </Dialog>
 
-      <View style={Styles.tittleScreen}>
-        <Image
-          source={require("../../assets/logo_appil.png")}
-          style={{
-            width: 250,
-            height: 150,
-            justifyContent: 'center',
-            alignContent: "center"
-          }}
-        />
-      </View>
+      <LogoAppil />
 
-
-
-      <View style={[Styles.textInputContainer]}>
+      <ScrollView style={Styles.textInputContainer}>
         <TextInput
           placeholder='Insira seu nome completo'
           value={name}
@@ -138,6 +130,7 @@ export default function CadastroUsuario(props) {
         <TextInput
           placeholder='Insira seu e-mail'
           keyboardType="email-address"
+          autoCapitalize='none'
           value={email}
           onChangeText={(e) => setEmail(e)}
           style={Styles.textInput}
@@ -159,9 +152,6 @@ export default function CadastroUsuario(props) {
           style={Styles.textInput}
         />
 
-      </View>
-
-      <View style={Styles.textInputContainer}>        
         <Button
           disabled={submitDisable}
           mode="contained"
@@ -169,10 +159,9 @@ export default function CadastroUsuario(props) {
           labelStyle={Styles.textMinor}
           color='#6CCFB7'
           onPress={() => validateInfo()} >
-            Cadastrar
-          </Button>
-
-      </View>
+          Cadastrar
+        </Button>
+      </ScrollView>
 
       <View style={{ width: "100%" }}>
         <Divider width={2} color='black' />
@@ -184,7 +173,7 @@ export default function CadastroUsuario(props) {
           <TouchableOpacity
             onPress={() => { navigation.replace("Login") }}
           >
-            <Text style={[Styles.textMinor, { color: 'blue'}]}> Login </Text>
+            <Text style={[Styles.textMinor, { color: 'blue' }]}> Login </Text>
           </TouchableOpacity>
 
 

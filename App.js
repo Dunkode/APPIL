@@ -4,19 +4,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Sobre from './src/screens/Sobre';
 import CadastroUsuario from './src/screens/CadastroUsuario';
-import ListaFarmacias from './src/screens/ListaFarmacias';
+import MapsFarmacias from './src/screens/MapsFarmacias';
 import ListaRemedios from './src/screens/ListaRemedios';
 import PerguntasFrequentes from './src/screens/PerguntasFrequentes';
+import Estrutura from './src/screens/Estrutura';
 import Menu from "./src/screens/Menu";
 import {
   useFonts,
   PatrickHand_400Regular,
   PatrickHandSC_400Regular
-
 } from '@expo-google-fonts/dev';
 import { StatusBar } from 'react-native';
-
-
+import CadastroRemedio from './src/screens/CadastroRemedio';
 
 
 export default function App() {
@@ -36,13 +35,16 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName='Login'
+          screenOptions={
+            { headerShown:false }
+          }
         >
 
           <Stack.Screen
             name='Login'
             component={Login}
             options={
-              { title: "Login" }
+              { title: "Login", headerShown:false }
             }
           />
 
@@ -63,10 +65,10 @@ export default function App() {
           />
 
           <Stack.Screen
-            name='ListaFarmacias'
-            component={ListaFarmacias}
+            name='MapsFarmacias'
+            component={MapsFarmacias}
             options={
-              { title: "ListaFarmacias" }
+              { title: "MapsFarmacias" }
             }
           />
 
@@ -88,10 +90,15 @@ export default function App() {
 
           <Stack.Screen
             name='Menu'
-            component={Menu}
-            options={
-              { title: "Menu" }
-            }
+            component={Menu}            
+          />
+          <Stack.Screen
+            name='Estrutura'
+            component={Estrutura}            
+          />
+          <Stack.Screen
+            name='CadastroRemedio'
+            component={CadastroRemedio}            
           />
 
         </Stack.Navigator>

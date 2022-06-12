@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import firebaseConfig from "../config/firebase-auth.json"
 
 export function validateUser(email, pass) {
@@ -45,12 +45,28 @@ export function createUser(email, pass) {
                     console.log(errorCode)
                     if (errorCode === "auth/invalid-email")
                         reject("E-mail inválido!")
-                    else {
+                    else if (error.code === "auth/email-already-in-use"){
+                        reject({ "erro": "Email já registrado!!" })
+                            
+                    } else {
                         reject("Verifique as informações inseridas e tente novamente!")
                     }
                 });
         } catch (error) {
             reject(error)
         }
+    })
+}
+
+export const logoff = () => {
+    return new Promise((resolve, reject) => {
+        const auth = getAuth();
+        console.log(auth)
+        signOut(auth).then(() => {
+            resolve()
+        }).catch((error) => {
+            reject(error)
+        });
+
     })
 }
