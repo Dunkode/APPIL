@@ -1,3 +1,4 @@
+import { PatrickHand_400Regular } from '@expo-google-fonts/dev'
 import { Dimensions, StyleSheet } from 'react-native'
 
 const primaryColor = '#b2dad2'
@@ -31,8 +32,6 @@ export default StyleSheet.create({
     button: {
         borderRadius: 20,
         width: "100%",
-        marginBottom:10, 
-        marginTop: 10
     },
     textInEndContainer: {
         justifyContent: 'flex-end',
@@ -45,8 +44,8 @@ export default StyleSheet.create({
 
     },
     textLarge: {
+        fontSize: 32,
         fontFamily: "PatrickHand_400Regular",
-        fontSize: 32
     },
     buttonContainer: {
         flex: 1,
@@ -69,7 +68,7 @@ export default StyleSheet.create({
         backgroundColor: secondaryColor,
         width: "100%",
         minHeight: 60
-    },    
+    },
     tail: {
         flexDirection: "row",
         justifyContent: "center",
@@ -78,13 +77,29 @@ export default StyleSheet.create({
         width: "100%",
     },
     mapVisualization: {
-        flex:1,
+        flex: 1,
         width: Dimensions.get("window").width,
         height: Dimensions.get("window").height - 100
     },
     cardContainer: {
         borderRadius: 20,
         borderWidth: 2,
-        width: "100%"
+        width: "100%",
+        backgroundColor: secondaryColor,
+        marginBottom: 25
+    },
+    dialog: {
+        backgroundColor: primaryColor,
+        maxHeight: "70%"
+    },
+    cardProdContainer: {
+        flex: 1,
+        backgroundColor: secondaryColor,
+        width: "100%",
+        marginBottom: 20,
+        marginTop: 20,
+        padding: 10,
+        flexDirection: "row", 
+        alignItems:"center"
     }
 })

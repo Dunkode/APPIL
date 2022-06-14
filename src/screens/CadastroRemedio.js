@@ -1,25 +1,29 @@
 import { View, Text, TextInput, Alert, ScrollView, FlatList, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
+import { Image } from '@rneui/themed'
 import { getAuth } from 'firebase/auth'
+import { Button, Checkbox, Dialog } from 'react-native-paper'
 
 import Styles from '../components/StyleComponent'
 import Header from '../components/Header'
 import Tail from '../components/Tail'
-import { Button, Checkbox, Dialog } from 'react-native-paper'
-import { createRemedio } from '../utils/CrudRemedioProvider'
-import { Image } from '@rneui/themed'
+import { saveRemedio } from '../utils/CrudRemedioProvider'
 import { getAllFarmacias } from '../utils/CrudFarmaciaProvider'
+
 
 export default function CadastroRemedio(props) {
     const { navigation } = props
+    const { route } = props
 
-    const [nomeGenerico, setNomeGenerico] = useState("")
-    const [nomeComercial, setNomeComercial] = useState("")
-    const [valor, setValor] = useState()
-    const [quantidade, setQuantidade] = useState()
-    const [farmacia, setFarmacia] = useState("")
-    const [idFarmacia, setIdFarmacia] = useState("")
-    const [checked, setChecked] = useState(false)
+    const remedioEdition = route.params
+
+    const [nomeGenerico, setNomeGenerico] = useState(remedioEdition ? remedioEdition.nomeGenerico : "")
+    const [nomeComercial, setNomeComercial] = useState(remedioEdition ? remedioEdition.nomeComercial : "")
+    const [valor, setValor] = useState(remedioEdition ? remedioEdition.valor : undefined)
+    const [quantidade, setQuantidade] = useState(remedioEdition ? remedioEdition.quantidade : undefined)
+    const [farmacia, setFarmacia] = useState(remedioEdition ? remedioEdition.farmacia : "")
+    const [idFarmacia, setIdFarmacia] = useState(remedioEdition ? remedioEdition.idFarmacia : "")
+    const [checked, setChecked] = useState(remedioEdition ? remedioEdition.promocao : false)
     const [visible, setVisible] = useState(false)
     const [farmaciasCadastradas, setFarmaciasCadastradas] = useState([])
 
@@ -28,26 +32,46 @@ export default function CadastroRemedio(props) {
     useLayoutEffect(() => {
         getAllFarmacias()
             .then((lista) => setFarmaciasCadastradas(lista))
-            .catch((error) => Alert.alert("Erro ao consultar Farmácias:" + error))
+            .catch((error) => {
+                Alert.alert("Erro ao consultar Farmácias:" + error)
+                console.log(error)
+            })
     }, [])
 
     const verificaForm = () => {
         if (nomeGenerico && nomeComercial && valor && quantidade && farmacia) {
-            const dados = {
-                "nomeGenerico": nomeGenerico,
-                "nomeComercial": nomeComercial,
-                "valor": valor,
-                "quantidade": quantidade,
-                "promocao": checked,
-                "farmacia": farmacia,
-                "idFarmacia": idFarmacia
-            }
-            createRemedio(dados, auth.currentUser.uid)
+            const dados = remedioEdition ?
+                {
+                    "id": remedioEdition.id,
+                    "nomeGenerico": nomeGenerico,
+                    "nomeComercial": nomeComercial,
+                    "valor": valor,
+                    "quantidade": quantidade,
+                    "promocao": checked,
+                    "farmacia": farmacia,
+                    "idFarmacia": idFarmacia
+                }
+                :
+                {
+                    "nomeGenerico": nomeGenerico,
+                    "nomeComercial": nomeComercial,
+                    "valor": valor,
+                    "quantidade": quantidade,
+                    "promocao": checked,
+                    "farmacia": farmacia,
+                    "idFarmacia": idFarmacia
+                }
+
+            console.log(dados)
+            saveRemedio(dados, auth.currentUser.uid)
                 .then(() => {
                     Alert.alert("Cadastro do remédio " + nomeGenerico + " criado com sucesso!")
                     limpaForm()
                 })
-                .catch((error) => Alert.alert("Erro ao cadastrar o remédio " + nomeGenerico + ":\n" + error))
+                .catch((error) => {
+                    Alert.alert("Erro ao cadastrar o remédio " + nomeGenerico + ":\n" + error)
+                    console.log(error)
+                })
         } else {
             Alert.alert("Preencha todos os dados do formulário!")
         }

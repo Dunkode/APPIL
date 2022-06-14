@@ -8,11 +8,13 @@ export default function ProdutoCard(props) {
     console.log(remedio)
     return (
         <View style={Styles.cardContainer}>
-            <Text>Nome Genérico: {remedio.nomeGenerico}</Text>
-            <Text>Nome Comercial: {remedio.nomeComercial}</Text>
-            <Text>Valor: {remedio.valor}</Text>
-            <Text>Quantidade na embalagem: {remedio.quantidade}</Text>
-            <Text>Promoção: {remedio.promocao ? "Sim" : "Não"}</Text>
+            <View style={{marginStart:10}}>
+                <Text style={Styles.textMinor}>Nome Genérico: {remedio.nomeGenerico}</Text>
+                <Text style={Styles.textMinor}>Nome Comercial: {remedio.nomeComercial}</Text>
+                <Text style={Styles.textMinor}>Valor: {remedio.valor}</Text>
+                <Text style={Styles.textMinor}>Quantidade na embalagem: {remedio.quantidade}</Text>
+                <Text style={Styles.textMinor}>Promoção: {remedio.promocao ? "Sim" : "Não"}</Text>
+            </View>
         </View>
     )
 }

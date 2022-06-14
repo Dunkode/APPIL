@@ -34,9 +34,7 @@ export default function Login(props) {
   }
 
   const reminder = async () => {
-    setChecked(!checked)
-
-    if (!checked) {
+    if (checked) {
       await AsyncStorage.setItem('email', email)
       await AsyncStorage.setItem("pass", pass)
 
@@ -47,7 +45,7 @@ export default function Login(props) {
   }
 
   const validateCredentials = async () => {
-
+    reminder()
     if (email.length > 0 && pass.length > 0) {
       try {
         setSubmitDisable(true)
@@ -106,10 +104,7 @@ export default function Login(props) {
         >
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setChecked(!checked)
-              reminder()
-            }}
+            onPress={() => setChecked(!checked)}
             color="#6CCFB7"
             />
           <Text style={Styles.textLarge}>Lembrar-me</Text>

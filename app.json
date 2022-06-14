@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/adaptive-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,8 +22,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/pill.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "package": "br.com.imed.appil",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBtFQKz6g--_IDtzUa5dM_rpC-MNtCVm3M"
+        }
       }
     },
     "web": {

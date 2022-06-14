@@ -12,7 +12,6 @@ import { Dialog } from 'react-native-paper'
 import { getRemediosByUserAndFarmacia } from '../utils/CrudRemedioProvider'
 import { getAuth } from 'firebase/auth'
 import ProdutoCard from '../components/ProdutoCard'
-import { DialogButton } from '@rneui/base/dist/Dialog/Dialog.Button'
 
 export default function MapsFarmacias(props) {
 
@@ -23,6 +22,8 @@ export default function MapsFarmacias(props) {
   const [farmaciaSelecionada, setFarmaciaSelecionada] = useState({})
   const [remediosFarmaciaSelecionada, setRemediosFarmaciaSelecionada] = useState([])
   const [visible, setVisible] = useState(false)
+
+  let nomeFarmacia = farmaciaSelecionada.data ? farmaciaSelecionada.data().nome : undefined
 
   const requestMyPosition = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -39,12 +40,12 @@ export default function MapsFarmacias(props) {
     const auth = getAuth()
     setFarmaciaSelecionada(farmacia)
     getRemediosByUserAndFarmacia(farmacia.id, auth.currentUser.uid)
-    .then((remedios) => {
-      setRemediosFarmaciaSelecionada(remedios)
-      setVisible(!visible)
-    })
-    .catch((error) => Alert.alert("erro ao procurar os remédios: " + error))
-    
+      .then((remedios) => {
+        setRemediosFarmaciaSelecionada(remedios)
+        setVisible(!visible)
+      })
+      .catch((error) => Alert.alert("erro ao procurar os remédios: " + error))
+
   }
 
   useLayoutEffect(() => {
@@ -105,30 +106,37 @@ export default function MapsFarmacias(props) {
           })}
         </MapView>
 
-
-        <Dialog visible={visible} onDismiss={() => setVisible(!visible)}>
-          <Dialog.Title>Produtos da {farmaciaSelecionada.data ? farmaciaSelecionada.data().nome : "nada"}: </Dialog.Title>
-          <Dialog.Content>
-            <FlatList
-              data={remediosFarmaciaSelecionada}
-              renderItem={({ item }) => {
-                console.log(item)
-                return (
-                  <ProdutoCard
-                    remedio={item.data()}
-                  >
-
-                  </ProdutoCard>
-                )
-              }}
-              keyExtractor={item => item.id}>
-
-            </FlatList>
-
-          </Dialog.Content>
-        </Dialog>
-
         <Tail navigation={navigation}></Tail>
+
+        <Dialog
+          visible={visible}
+          onDismiss={() => setVisible(!visible)}
+          style={Styles.dialog}>
+          <Dialog.Title style={Styles.textMinor}>Produtos da {nomeFarmacia}: </Dialog.Title>
+          <Dialog.ScrollArea>
+            {remediosFarmaciaSelecionada.length > 0 ?
+              <FlatList
+                data={remediosFarmaciaSelecionada}
+                renderItem={({ item }) => {
+                  console.log(item)
+                  return (
+                    <ProdutoCard
+                      remedio={item.data()}
+                    >
+                    </ProdutoCard>
+                  )
+                }}
+                keyExtractor={item => item.id}>
+
+              </FlatList>
+              :
+              <Text style={Styles.textMinor}>
+                Sem remédios cadastrados para {nomeFarmacia}
+              </Text>
+            }
+
+          </Dialog.ScrollArea>
+        </Dialog>
       </View>
     )
   } else {

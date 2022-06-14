@@ -62,7 +62,7 @@ export default function Menu(props) {
                     uppercase={false}
                     labelStyle={Styles.textLarge}
                     color='#6CCFB7'
-                    onPress={() => { }}>
+                    onPress={() => { navigation.push("ListaRemedios") }}>
                     Procurar remédios
                 </Button>
             </View>
