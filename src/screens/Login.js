@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import Styles from '../components/StyleComponent'
 import * as AuthenticationProvider from "../utils/AuthenticationProvider"
 import LogoAppil from '../components/LogoAppil'
+import formValidator from '../utils/FormValidator'
 
 
 export default function Login(props) {
@@ -46,9 +47,30 @@ export default function Login(props) {
     }
   }
 
+  const formObject = () => {
+    return [
+      {
+        "form": email,
+        "formName": "E-mail",
+        "message": "E-mail deve conter ao menos 6 caracteres!",
+        "rule": (email < 6)
+      }
+      ,
+      {
+        "form": pass,
+        "formName": "Senha",
+        "message": "Senha deve conter ao menos 6 caracteres!",
+        "rule": (pass < 6)
+      }
+    ]
+  }
+
   const validateCredentials = async () => {
     reminder()
-    if (email.length > 0 && pass.length > 0) {
+
+    let {haveError, listOfErrors} = formValidator(formObject())
+
+    if (haveError) {
       try {
         setSubmitDisable(true)
         await AuthenticationProvider.validateUser(email, pass)
@@ -62,10 +84,13 @@ export default function Login(props) {
       }
 
     } else {
-      ({ "id": 1, "Resultado": "Preencha os campos de E-mail e Senha!" })
-
+      
     }
   }
+
+  // const verifyForm = () => {
+
+  // }
 
   return (
     <View style={[Styles.container, Styles.centralize]}>
@@ -134,28 +159,6 @@ export default function Login(props) {
 
         </View>
       </View>
-
-      <Dialog
-        style={Styles.dialog}
-        visible={dlgVisible}
-        onDismiss={() => setDlgVisible(!dlgVisible)}
-      >
-        <Dialog.Title style={Styles.textMinor}>{ }</Dialog.Title>
-
-        {
-
-        <Dialog.ScrollArea>
-          {
-            errorDialog.map((item) => {
-              return (
-                <Text>{Object.keys(item)[1]}: {Object.values(item)[1]}</Text>
-              )
-            })
-          }
-        </Dialog.ScrollArea>
-        }
-      </Dialog>
-
     </View>
   )
 }

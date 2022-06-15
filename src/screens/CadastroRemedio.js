@@ -119,47 +119,10 @@ export default function CadastroRemedio(props) {
                     console.log(error)
                 })
         } else {
-            const verificaForm = () => {
-                let temErro = true
-                let errorList = []
-
-                if (nomeGenerico == "") {
-                    errorList.push({ "id": 1, "Genérico": "Nome genérico deve ser informado!" })
-                }
-                if (nomeGenerico.length < 4) {
-                    errorList.push({ "id": 2, "Genérico": "Nome genérico precisa ter ao menos 3 letras" })
-                }
-
-                if (nomeComercial == "") {
-                    errorList.push({ "id": 3, "Comerical": "Nome comercial deve ser informado!" })
-                }
-                if (nomeComercial.length < 4) {
-                    errorList.push({ "id": 4, "Comerical": "Nome comercial precisa ter ao menos 3 letras" })
-                }
-
-                if (!valor) {
-                    errorList.push({ "id": 5, "Valor": "Valor deve ser informado!" })
-                }
-
-                if (!quantidade) {
-                    errorList.push({ "id": 6, "Quantidade": "Quantidade deve ser informada!" })
-                }
-
-                if (farmacia == "") {
-                    errorList.push({ "id": 7, "Farmácia": "Fármacia deve ser selecionada!" })
-                }
-
-                if (errorList.length > 0) {
-                    temErro = true
-                }
-
-                return { temErro, errorList }
-            }
             setErrorDialog(errorList)
             setDlgErrorVisible(!dlgErrorVisible)
         }
     }
-
 
     const limpaForm = () => {
         setNomeComercial("")
