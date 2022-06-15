@@ -1,8 +1,8 @@
 import { useLayoutEffect, useState } from 'react'
 import React from 'react'
-import { View, Text, Alert, TextInput, TouchableOpacity, ScrollView,  } from 'react-native'
+import { View, Text, Alert, TextInput, TouchableOpacity, ScrollView, } from 'react-native'
 import { Divider } from "@rneui/themed"
-import { Button, Checkbox } from 'react-native-paper'
+import { Button, Checkbox, Dialog } from 'react-native-paper'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import Styles from '../components/StyleComponent'
@@ -16,6 +16,8 @@ export default function Login(props) {
   const [pass, setPass] = useState("")
   const [checked, setChecked] = useState(false)
   const [submitDisable, setSubmitDisable] = useState(false)
+  const [dlgVisible, setDlgVisible] = useState(false)
+
 
   const { navigation } = props
 
@@ -60,7 +62,7 @@ export default function Login(props) {
       }
 
     } else {
-      Alert.alert("Preencha os campos de E-mail e Senha!")
+      ({ "id": 1, "Resultado": "Preencha os campos de E-mail e Senha!" })
 
     }
   }
@@ -71,14 +73,14 @@ export default function Login(props) {
       <LogoAppil />
 
       <ScrollView style={[Styles.textInputContainer]}>
-          <TextInput
-            placeholder='E-mail'
-            value={email}
-            keyboardType="email-address"
-            onChangeText={(e) => setEmail(e)}
-            style={Styles.textInput}
-            
-            />
+        <TextInput
+          placeholder='E-mail'
+          value={email}
+          keyboardType="email-address"
+          onChangeText={(e) => setEmail(e)}
+          style={Styles.textInput}
+
+        />
 
         <TextInput
           placeholder='Senha'
@@ -86,18 +88,18 @@ export default function Login(props) {
           value={pass}
           onChangeText={(p) => setPass(p)}
           style={Styles.textInput}
-          />
+        />
 
-          <Button
-            mode="contained"
-            style={Styles.button}
-            uppercase={false}
-            labelStyle={Styles.textMinor}
-            color='#6CCFB7'
-            onPress={() => validateCredentials()}
-            disabled={submitDisable}>
-            Acessar
-          </Button>
+        <Button
+          mode="contained"
+          style={Styles.button}
+          uppercase={false}
+          labelStyle={Styles.textMinor}
+          color='#6CCFB7'
+          onPress={() => validateCredentials()}
+          disabled={submitDisable}>
+          Acessar
+        </Button>
 
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -106,7 +108,7 @@ export default function Login(props) {
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => setChecked(!checked)}
             color="#6CCFB7"
-            />
+          />
           <Text style={Styles.textLarge}>Lembrar-me</Text>
         </View>
 
@@ -132,6 +134,27 @@ export default function Login(props) {
 
         </View>
       </View>
+
+      <Dialog
+        style={Styles.dialog}
+        visible={dlgVisible}
+        onDismiss={() => setDlgVisible(!dlgVisible)}
+      >
+        <Dialog.Title style={Styles.textMinor}>{ }</Dialog.Title>
+
+        {
+
+        <Dialog.ScrollArea>
+          {
+            errorDialog.map((item) => {
+              return (
+                <Text>{Object.keys(item)[1]}: {Object.values(item)[1]}</Text>
+              )
+            })
+          }
+        </Dialog.ScrollArea>
+        }
+      </Dialog>
 
     </View>
   )

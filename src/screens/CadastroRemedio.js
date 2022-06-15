@@ -12,6 +12,7 @@ import { getAllFarmacias } from '../utils/CrudFarmaciaProvider'
 
 
 export default function CadastroRemedio(props) {
+    const auth = getAuth()
     const { navigation } = props
     const { route } = props
 
@@ -24,10 +25,13 @@ export default function CadastroRemedio(props) {
     const [farmacia, setFarmacia] = useState(remedioEdition ? remedioEdition.farmacia : "")
     const [idFarmacia, setIdFarmacia] = useState(remedioEdition ? remedioEdition.idFarmacia : "")
     const [checked, setChecked] = useState(remedioEdition ? remedioEdition.promocao : false)
-    const [visible, setVisible] = useState(false)
-    const [farmaciasCadastradas, setFarmaciasCadastradas] = useState([])
 
-    const auth = getAuth()
+    const [dlgFarmVisible, setDlgFarmVisible] = useState(false)
+    const [dlgErrorVisible, setDlgErrorVisible] = useState(false)
+    const [errorDialog, setErrorDialog] = useState([])
+    const [dlgSuccesVisible, setDlgSucessVisible] = useState(false)
+
+    const [farmaciasCadastradas, setFarmaciasCadastradas] = useState([])
 
     useLayoutEffect(() => {
         getAllFarmacias()
@@ -39,7 +43,48 @@ export default function CadastroRemedio(props) {
     }, [])
 
     const verificaForm = () => {
-        if (nomeGenerico && nomeComercial && valor && quantidade && farmacia) {
+        let temErro = true
+        let errorList = []
+
+        if (nomeGenerico == "") {
+            errorList.push({ "id": 1, "Genérico": "Nome genérico deve ser informado!" })
+        }
+        if (nomeGenerico.length < 4) {
+            errorList.push({ "id": 2, "Genérico": "Nome genérico precisa ter ao menos 3 letras" })
+        }
+
+        if (nomeComercial == "") {
+            errorList.push({ "id": 3, "Comerical": "Nome comercial deve ser informado!" })
+        }
+        if (nomeComercial.length < 4) {
+            errorList.push({ "id": 4, "Comerical": "Nome comercial precisa ter ao menos 3 letras" })
+        }
+
+        if (!valor) {
+            errorList.push({ "id": 5, "Valor": "Valor deve ser informado!" })
+        }
+
+        if (!quantidade) {
+            errorList.push({ "id": 6, "Quantidade": "Quantidade deve ser informada!" })
+        }
+
+        if (farmacia == "") {
+            errorList.push({ "id": 7, "Farmácia": "Fármacia deve ser selecionada!" })
+        }
+
+        if (errorList.length > 0) {
+            temErro = true
+        }
+
+        return { temErro, errorList }
+    }
+
+    const enviarDados = () => {
+        let { temErro, errorList } = verificaForm()
+
+        console.log(temErro)
+
+        if (!temErro) {
             const dados = remedioEdition ?
                 {
                     "id": remedioEdition.id,
@@ -65,29 +110,66 @@ export default function CadastroRemedio(props) {
             console.log(dados)
             saveRemedio(dados, auth.currentUser.uid)
                 .then(() => {
-                    Alert.alert("Cadastro do remédio " + nomeGenerico + " criado com sucesso!")
+                    setDlgSucessVisible(!setDlgSucessVisible)
                     limpaForm()
                 })
                 .catch((error) => {
-                    Alert.alert("Erro ao cadastrar o remédio " + nomeGenerico + ":\n" + error)
+                    setErrorDialog([{ "id": 11, "Resultado": error }])
+                    setDlgErrorVisible(!dlgErrorVisible)
                     console.log(error)
                 })
         } else {
-            Alert.alert("Preencha todos os dados do formulário!")
+            const verificaForm = () => {
+                let temErro = true
+                let errorList = []
+
+                if (nomeGenerico == "") {
+                    errorList.push({ "id": 1, "Genérico": "Nome genérico deve ser informado!" })
+                }
+                if (nomeGenerico.length < 4) {
+                    errorList.push({ "id": 2, "Genérico": "Nome genérico precisa ter ao menos 3 letras" })
+                }
+
+                if (nomeComercial == "") {
+                    errorList.push({ "id": 3, "Comerical": "Nome comercial deve ser informado!" })
+                }
+                if (nomeComercial.length < 4) {
+                    errorList.push({ "id": 4, "Comerical": "Nome comercial precisa ter ao menos 3 letras" })
+                }
+
+                if (!valor) {
+                    errorList.push({ "id": 5, "Valor": "Valor deve ser informado!" })
+                }
+
+                if (!quantidade) {
+                    errorList.push({ "id": 6, "Quantidade": "Quantidade deve ser informada!" })
+                }
+
+                if (farmacia == "") {
+                    errorList.push({ "id": 7, "Farmácia": "Fármacia deve ser selecionada!" })
+                }
+
+                if (errorList.length > 0) {
+                    temErro = true
+                }
+
+                return { temErro, errorList }
+            }
+            setErrorDialog(errorList)
+            setDlgErrorVisible(!dlgErrorVisible)
         }
     }
+
 
     const limpaForm = () => {
         setNomeComercial("")
         setNomeGenerico("")
-        setValor()
-        setQuantidade()
+        setValor(undefined)
+        setQuantidade(undefined)
         setFarmacia("")
         setIdFarmacia("")
         setChecked(false)
     }
-
-    // }
 
     return (
         <View style={[Styles.container, Styles.centralize]}>
@@ -95,7 +177,7 @@ export default function CadastroRemedio(props) {
             <Header
                 width={40}
                 height={40}
-                headerTittle="CADASTRO"
+                headerTittle={remedioEdition ? "EDIÇÃO" : "CADASTRO"}
                 spaceBetween={80}
                 useConfig={false}
             >
@@ -146,7 +228,7 @@ export default function CadastroRemedio(props) {
                         source={require("../../assets/google-maps.png")}
                         style={{ width: 40, height: 40, }}
                         onPress={() => {
-                            setVisible(!visible)
+                            setDlgFarmVisible(!dlgFarmVisible)
                         }}
                     />
                 </View>
@@ -170,14 +252,17 @@ export default function CadastroRemedio(props) {
                     uppercase={false}
                     labelStyle={Styles.textMinor}
                     color='#6CCFB7'
-                    onPress={() => verificaForm()}
+                    onPress={() => enviarDados()}
                 >
-                    Cadastrar
+                    {remedioEdition ? "Editar" : "Cadastrar"}
                 </Button>
             </ScrollView>
 
-            <Dialog visible={visible} >
-                <Dialog.Title>Selecione uma farmácia</Dialog.Title>
+            <Dialog
+                visible={dlgFarmVisible}
+                onDismiss={() => setDlgFarmVisible(!dlgFarmVisible)}
+                style={Styles.dialog}>
+                <Dialog.Title style={Styles.textMinor}>Selecione uma farmácia</Dialog.Title>
                 <Dialog.Content>
                     <FlatList
                         data={farmaciasCadastradas}
@@ -186,11 +271,11 @@ export default function CadastroRemedio(props) {
                                 <TouchableOpacity onPress={() => {
                                     setFarmacia(item.data().nome)
                                     setIdFarmacia(item.id)
-                                    setVisible(!visible)
+                                    setDlgFarmVisible(!dlgFarmVisible)
                                 }}>
                                     <Text
-                                        style={{ fontSize: 23, fontWeight: "bold" }}>
-
+                                        style={Styles.textLarge}
+                                    >
                                         {item.data().nome}
 
                                     </Text>
@@ -205,6 +290,42 @@ export default function CadastroRemedio(props) {
             </Dialog>
 
             <Tail navigation={navigation} />
+
+            <Dialog
+                visible={dlgErrorVisible}
+                onDismiss={() => {
+                    setDlgErrorVisible(!dlgErrorVisible)
+                    setErrorDialog([])
+                }}
+                style={Styles.dialog}
+            >
+                <Dialog.Title title="Erro!" />
+                <Dialog.ScrollArea>
+                    {
+                        errorDialog.map((item) => {
+                            return (
+                                <Text>{Object.keys(item)[1]}: {Object.values(item)[1]}</Text>
+                            )
+                        })
+                    }
+                </Dialog.ScrollArea>
+            </Dialog>
+
+            <Dialog
+                visible={dlgSuccesVisible}
+                onDismiss={() => setDlgSucessVisible(!dlgSuccesVisible)}
+                style={Styles.dialog}
+            >
+                <Dialog.Title title="Sucesso!" />
+                {
+                    remedioEdition ?
+                        <Text>Remédio {nomeGenerico} cadastrado com sucesso!</Text>
+                        :
+                        <Text>Remédio {nomeGenerico} editado com sucesso!</Text>
+                }
+
+            </Dialog>
+
         </View>
     )
 }

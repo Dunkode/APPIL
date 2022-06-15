@@ -1,8 +1,8 @@
-import { View, Text, Image, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, ScrollView } from 'react-native'
+import React, { useState } from 'react'
 import { TextInput } from 'react-native'
 import { Divider } from '@rneui/base'
-import { Dialog } from '@rneui/themed'
+import { Dialog } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native'
 import { Button } from 'react-native-paper'
 
@@ -95,7 +95,8 @@ export default function CadastroUsuario(props) {
           setErrorMessage([])
           setSubmitDisable(!submitDisable)
         }}
-      >
+        style={Styles.dialog}
+        >
         <Dialog.Title title="Erro!" />
         {
           errorMessage.map((item) => {
@@ -111,6 +112,7 @@ export default function CadastroUsuario(props) {
           navigation.replace("Menu")
           setSubmitDisable(!submitDisable)
         }}
+        style={Styles.dialog}
       >
         <Dialog.Title title="Sucesso!" />
         <Text>Usuário cadastrado com sucesso!</Text>

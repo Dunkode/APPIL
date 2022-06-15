@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import React from 'react'
 import { Button } from 'react-native-paper'
 
@@ -12,6 +12,12 @@ export default function CardProdutoPerFarmacia(props) {
 
     const editarRemedio = () => {
         navigation.push("CadastroRemedio", remedio)
+    }
+
+    const deletarRemedio = (remedio) => {
+        deleteRemedio(remedio)
+        .then((item) => Alert.alert("Remédio " + item.nome + " exluído com sucesso!"))
+        .catch((error) => Alert.alert("Erro ao deletar remédio:\n" + error))
     }
 
     return (
@@ -47,7 +53,7 @@ export default function CardProdutoPerFarmacia(props) {
                             height: 30,
                             margin: 10
                         }}
-                        onPress={() => deleteRemedio()}
+                        onPress={() => deletarRemedio(remedio)}
                     />
                 </View>
 

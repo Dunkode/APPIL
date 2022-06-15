@@ -82,13 +82,13 @@ export const getRemediosByUser = (userId) => {
     })
 }
 
-export const deleteRemedio = () => {
+export const deleteRemedio = (remedio) => {
     return new Promise(async (resolve, reject) => {
         try {
             initializeApp(firebaseConfig)
             const db = getFirestore()
 
-            const docId = await deleteDoc(doc(db, "tblremedio"))
+            const docId = await deleteDoc(doc(db, "tblremedio", remedio.id))
             resolve(docId)
         } catch (error) {
             reject(error)
