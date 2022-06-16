@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Alert } from 'react-native'
+import { View, FlatList, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 
 import Styles from '../components/StyleComponent'
@@ -7,7 +7,7 @@ import Tail from '../components/Tail'
 import CardProdutoPerFarmacia from '../components/CardProdutoPerFarmacia'
 import { getRemediosByUser } from '../utils/CrudRemedioProvider'
 import { getAuth } from 'firebase/auth'
-import { Ramabhadra_400Regular } from '@expo-google-fonts/dev'
+import StatusDialog from '../components/StatusDialog'
 
 export default function ListaRemedios(props) {
 
@@ -15,11 +15,19 @@ export default function ListaRemedios(props) {
 
   const [remedios, setRemedios] = useState({})
 
+  const [dlgVisible, setDlgVisible] = useState(false)
+  const [errorInForm, setErrorInForm] = useState(false)
+  const [errorMessage, setErrorMessage] = useState([])
+
   useLayoutEffect(() => {
     const auth = getAuth()
     getRemediosByUser(auth.currentUser.uid)
       .then((remedios) => { setRemedios(remedios) })
-      .catch((error) => Alert.alert("erro ao procurar os remédios: " + error))
+      .catch((error) => {
+        setDlgVisible(true)
+        setErrorInForm(true)
+        setErrorMessage([{"id": 10, "message": "Erro ao procurar remédios: " + error}])
+      })
 
   }, [])
 
@@ -52,6 +60,14 @@ export default function ListaRemedios(props) {
       />
 
       <Tail navigation={navigation} />
+
+      <StatusDialog
+        visible={dlgVisible}
+        isSucess={!errorInForm}
+        content={errorMessage}
+        disableFunction={() => setDlgVisible(false)}
+      />
+
     </View>
   )
 }

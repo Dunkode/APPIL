@@ -36,6 +36,15 @@ export default function Sobre(props) {
                 </Text>
             </View>
 
+            <View style={Styles.buttonContainer}>
+                <Text style={Styles.textLarge}>
+                    Modo utilizado: Expo
+                </Text>
+                <Text style={Styles.textMinor}>
+                    O Expo trás uma enorme facilidade no quesito de testes do que está sendo desenvolvido, por permitir roda-lo no celular e na Web ao mesmo tempo e sem necessidade de cabos.
+                </Text>
+            </View>
+
         <Tail navigation={navigation}></Tail>
         </View>
     )

@@ -1,17 +1,18 @@
 import { Alert, FlatList, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import * as Location from "expo-location"
 import MapView, { Marker } from 'react-native-maps'
+import { getAuth } from 'firebase/auth'
+import { StatusBar } from 'expo-status-bar'
+import { Dialog } from 'react-native-paper'
 
 import Styles from '../components/StyleComponent'
 import Tail from '../components/Tail'
 import Header from '../components/Header'
-import { StatusBar } from 'expo-status-bar'
 import { getAllFarmacias } from '../utils/CrudFarmaciaProvider'
-import { Dialog } from 'react-native-paper'
 import { getRemediosByUserAndFarmacia } from '../utils/CrudRemedioProvider'
-import { getAuth } from 'firebase/auth'
 import ProdutoCard from '../components/ProdutoCard'
+import StatusDialog from '../components/StatusDialog'
 
 export default function MapsFarmacias(props) {
 
@@ -22,6 +23,9 @@ export default function MapsFarmacias(props) {
   const [farmaciaSelecionada, setFarmaciaSelecionada] = useState({})
   const [remediosFarmaciaSelecionada, setRemediosFarmaciaSelecionada] = useState([])
   const [visible, setVisible] = useState(false)
+  const [dlgStatusVisible, setDlgStatusVisible] = useState(false)
+  const [errorInForm, setErrorInForm] = useState(false)
+  const [errorMessage, setErrorMessage] = useState([])
 
   let nomeFarmacia = farmaciaSelecionada.data ? farmaciaSelecionada.data().nome : undefined
 
@@ -44,7 +48,13 @@ export default function MapsFarmacias(props) {
         setRemediosFarmaciaSelecionada(remedios)
         setVisible(!visible)
       })
-      .catch((error) => Alert.alert("erro ao procurar os remédios: " + error))
+      .catch((error) => {
+        setDlgStatusVisible(true)
+        setErrorInForm(true)
+        console.log(error)
+        setErrorMessage([{"id": 10, "message": "Erro ao procurar Remédios: " + error}])
+
+      })
 
   }
 
@@ -53,7 +63,11 @@ export default function MapsFarmacias(props) {
 
     getAllFarmacias()
       .then((lista) => setFarmaciasCadastradas(lista))
-      .catch((error) => Alert.alert("Erro ao consultar Farmácias:" + error))
+      .catch((error) => {
+        setDlgStatusVisible(true)
+        setErrorInForm(true)
+        setErrorMessage([{"id": 11, "message": "Erro ao consultar Farmácias: " + error.erro}])
+      })
 
   }, [])
 
@@ -118,7 +132,6 @@ export default function MapsFarmacias(props) {
               <FlatList
                 data={remediosFarmaciaSelecionada}
                 renderItem={({ item }) => {
-                  console.log(item)
                   return (
                     <ProdutoCard
                       remedio={item.data()}
@@ -137,6 +150,15 @@ export default function MapsFarmacias(props) {
 
           </Dialog.ScrollArea>
         </Dialog>
+
+        <StatusDialog
+          visible={dlgStatusVisible}
+          isSucess={!errorInForm}
+          content={errorMessage}
+          disableFunction={() => setDlgStatusVisible(false)}
+        >
+
+        </StatusDialog>
       </View>
     )
   } else {

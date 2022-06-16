@@ -85,7 +85,7 @@ export default function Login(props) {
         setSubmitDisable(false)
         setDlgVisible(true)
         setErrorInForm(true)
-        setErrorMessage([{"id": 10, "message": "Resultado: erro ao login: " + error}])
+        setErrorMessage([{"id": 10, "message": "Erro ao realiazr login: " + error}])
       }
 
     } else {

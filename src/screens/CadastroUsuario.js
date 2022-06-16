@@ -55,7 +55,6 @@ export default function CadastroUsuario(props) {
   const validateInfo = async () => {
     setSubmitDisable(true)
     let forms = formObject()
-    console.log(rePassword == password)
     let { haveError, listOfErrors } = formValidator(forms)
 
     if (!haveError) {

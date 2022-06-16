@@ -164,12 +164,14 @@ export default function CadastroRemedio(props) {
 
                 <TextInput
                     placeholder='Valor'
+                    keyboardType='numeric'
                     value={valor}
                     onChangeText={(v) => setValor(v)}
                     style={Styles.textInput}
-                />
+                    />
                 <TextInput
                     placeholder='Quantidade'
+                    keyboardType='numeric'
                     value={quantidade}
                     onChangeText={(q) => setQuantidade(q)}
                     style={Styles.textInput}

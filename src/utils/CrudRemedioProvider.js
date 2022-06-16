@@ -9,7 +9,7 @@ export const saveRemedio = (remedioInfo, uid) => {
 
             initializeApp(firebaseConfig)
             const db = getFirestore()
-            console.log(remedioInfo.id)
+            
             if (remedioInfo.id) {
 
                 const dados = {

@@ -15,7 +15,6 @@ export function validateUser(email, pass) {
                     resolve(userCredencials.user)
                 })
                 .catch((error) => {
-                    console.log(error)
                     if (error.code === "auth/user-not-found")
                         reject({ "erro": "Usuário não encontrado!" })
                     else
@@ -23,7 +22,6 @@ export function validateUser(email, pass) {
                 })
 
         } catch (error) {
-            console.log(error)
             reject({ "erro": "Erro no processamento da requisição" })
         }
 
@@ -42,7 +40,6 @@ export function createUser(email, pass) {
                 })
                 .catch((error) => {
                     const errorCode = error.code;
-                    console.log(errorCode)
                     if (errorCode === "auth/invalid-email")
                         reject("E-mail inválido!")
                     else if (error.code === "auth/email-already-in-use"){
@@ -61,7 +58,6 @@ export function createUser(email, pass) {
 export const logoff = () => {
     return new Promise((resolve, reject) => {
         const auth = getAuth();
-        console.log(auth)
         signOut(auth).then(() => {
             resolve()
         }).catch((error) => {

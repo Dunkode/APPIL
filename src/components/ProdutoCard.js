@@ -5,7 +5,6 @@ import Styles from '../components/StyleComponent'
 
 export default function ProdutoCard(props) {
     const remedio = props.remedio
-    console.log(remedio)
     return (
         <View style={Styles.cardContainer}>
             <View style={{marginStart:10}}>
