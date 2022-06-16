@@ -23,7 +23,7 @@ export default function CardProdutoPerFarmacia(props) {
     return (
         <View style={[Styles.cardProdContainer]}>
             <Image
-                source={require("../../assets/pill.png")}
+                source={require("../../assets/medicine.png")}
                 style={{
                     width: 60,
                     height: 60,

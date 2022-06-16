@@ -32,7 +32,7 @@ export default function PerguntasFrequentes(props) {
 
             <View style={Styles.buttonContainer}>
                 <Text style={Styles.textMinor}>
-                    A opção Procurar Remédios é utilizada para pesquisar em quais farmácias e quais valores dos remédios requisitados
+                    A opção Procurar Remédios é utilizada para mostrar os remédios cadastrados, assim como editá-los ou excluí-los.
                 </Text>
             </View>
 

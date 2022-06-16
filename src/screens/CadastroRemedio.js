@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert, ScrollView, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, ScrollView, FlatList, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { Image } from '@rneui/themed'
 import { getAuth } from 'firebase/auth'
@@ -9,6 +9,8 @@ import Header from '../components/Header'
 import Tail from '../components/Tail'
 import { saveRemedio } from '../utils/CrudRemedioProvider'
 import { getAllFarmacias } from '../utils/CrudFarmaciaProvider'
+import formValidator from '../utils/FormValidator'
+import StatusDialog from '../components/StatusDialog'
 
 
 export default function CadastroRemedio(props) {
@@ -27,9 +29,10 @@ export default function CadastroRemedio(props) {
     const [checked, setChecked] = useState(remedioEdition ? remedioEdition.promocao : false)
 
     const [dlgFarmVisible, setDlgFarmVisible] = useState(false)
-    const [dlgErrorVisible, setDlgErrorVisible] = useState(false)
-    const [errorDialog, setErrorDialog] = useState([])
-    const [dlgSuccesVisible, setDlgSucessVisible] = useState(false)
+
+    const [dlgStatusVisible, setDlgStatusVisible] = useState(false)
+    const [errorInForm, setErrorInForm] = useState(false)
+    const [errorMessage, setErrorMessage] = useState([])
 
     const [farmaciasCadastradas, setFarmaciasCadastradas] = useState([])
 
@@ -37,54 +40,47 @@ export default function CadastroRemedio(props) {
         getAllFarmacias()
             .then((lista) => setFarmaciasCadastradas(lista))
             .catch((error) => {
-                Alert.alert("Erro ao consultar Farmácias:" + error)
-                console.log(error)
+                setDlgStatusVisible(true)
+                setErrorInForm(true)
+                setErrorMessage([{ "id": 10, "message": "Erro ao procurar Farmácias: " + error }])
             })
     }, [])
 
-    const verificaForm = () => {
-        let temErro = true
-        let errorList = []
 
-        if (nomeGenerico == "") {
-            errorList.push({ "id": 1, "Genérico": "Nome genérico deve ser informado!" })
-        }
-        if (nomeGenerico.length < 4) {
-            errorList.push({ "id": 2, "Genérico": "Nome genérico precisa ter ao menos 3 letras" })
-        }
-
-        if (nomeComercial == "") {
-            errorList.push({ "id": 3, "Comerical": "Nome comercial deve ser informado!" })
-        }
-        if (nomeComercial.length < 4) {
-            errorList.push({ "id": 4, "Comerical": "Nome comercial precisa ter ao menos 3 letras" })
-        }
-
-        if (!valor) {
-            errorList.push({ "id": 5, "Valor": "Valor deve ser informado!" })
-        }
-
-        if (!quantidade) {
-            errorList.push({ "id": 6, "Quantidade": "Quantidade deve ser informada!" })
-        }
-
-        if (farmacia == "") {
-            errorList.push({ "id": 7, "Farmácia": "Fármacia deve ser selecionada!" })
-        }
-
-        if (errorList.length > 0) {
-            temErro = true
-        }
-
-        return { temErro, errorList }
+    const formObject = () => {
+        return [
+            {
+                "form": nomeGenerico,
+                "formName": "Nome Genérico",
+                "message": "Deve conter ao menos 4 caracteres!",
+                "rule": (nomeGenerico.length < 4)
+            },
+            {
+                "form": nomeComercial,
+                "formName": "Nome Comercial",
+                "message": "Deve conter ao menos 4 caracteres!",
+                "rule": (nomeComercial.length < 4)
+            },
+            {
+                "form": valor,
+                "formName": "Valor",
+            },
+            {
+                "form": quantidade,
+                "formName": "Quantidade",
+            },
+            {
+                "form": farmacia,
+                "formName": "Farmácia",
+            },
+        ]
     }
 
     const enviarDados = () => {
-        let { temErro, errorList } = verificaForm()
+        let forms = formObject()
+        let { haveError, listOfErrors } = formValidator(forms)
 
-        console.log(temErro)
-
-        if (!temErro) {
+        if (!haveError) {
             const dados = remedioEdition ?
                 {
                     "id": remedioEdition.id,
@@ -107,20 +103,22 @@ export default function CadastroRemedio(props) {
                     "idFarmacia": idFarmacia
                 }
 
-            console.log(dados)
             saveRemedio(dados, auth.currentUser.uid)
                 .then(() => {
-                    setDlgSucessVisible(!setDlgSucessVisible)
+                    setDlgStatusVisible(true)
+                    setErrorInForm(false)
+                    setErrorMessage([{ "id": 10, "message": `Remédio ${nomeGenerico} ${remedioEdition ? "editado" : "cadastrado"} com sucesso!` }])
                     limpaForm()
                 })
                 .catch((error) => {
-                    setErrorDialog([{ "id": 11, "Resultado": error }])
-                    setDlgErrorVisible(!dlgErrorVisible)
-                    console.log(error)
+                    setDlgStatusVisible(true)
+                    setErrorInForm(true)
+                    setErrorMessage([{ "id": 11, "message": "Erro ao enviar dados: " + error }])
                 })
         } else {
-            setErrorDialog(errorList)
-            setDlgErrorVisible(!dlgErrorVisible)
+            setDlgStatusVisible(true)
+            setErrorInForm(true)
+            setErrorMessage(listOfErrors)
         }
     }
 
@@ -254,41 +252,14 @@ export default function CadastroRemedio(props) {
 
             <Tail navigation={navigation} />
 
-            <Dialog
-                visible={dlgErrorVisible}
-                onDismiss={() => {
-                    setDlgErrorVisible(!dlgErrorVisible)
-                    setErrorDialog([])
-                }}
-                style={Styles.dialog}
+            <StatusDialog
+                visible={dlgStatusVisible}
+                isSucess={!errorInForm}
+                content={errorMessage}
+                disableFunction={() => setDlgStatusVisible(false)}
             >
-                <Dialog.Title title="Erro!" />
-                <Dialog.ScrollArea>
-                    {
-                        errorDialog.map((item) => {
-                            return (
-                                <Text>{Object.keys(item)[1]}: {Object.values(item)[1]}</Text>
-                            )
-                        })
-                    }
-                </Dialog.ScrollArea>
-            </Dialog>
 
-            <Dialog
-                visible={dlgSuccesVisible}
-                onDismiss={() => setDlgSucessVisible(!dlgSuccesVisible)}
-                style={Styles.dialog}
-            >
-                <Dialog.Title title="Sucesso!" />
-                {
-                    remedioEdition ?
-                        <Text>Remédio {nomeGenerico} cadastrado com sucesso!</Text>
-                        :
-                        <Text>Remédio {nomeGenerico} editado com sucesso!</Text>
-                }
-
-            </Dialog>
-
+            </StatusDialog>
         </View>
     )
 }

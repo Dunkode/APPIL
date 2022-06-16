@@ -9,6 +9,7 @@ import Styles from '../components/StyleComponent'
 import * as AuthenticationProvider from "../utils/AuthenticationProvider"
 import LogoAppil from '../components/LogoAppil'
 import formValidator from '../utils/FormValidator'
+import StatusDialog from '../components/StatusDialog'
 
 
 export default function Login(props) {
@@ -18,6 +19,8 @@ export default function Login(props) {
   const [checked, setChecked] = useState(false)
   const [submitDisable, setSubmitDisable] = useState(false)
   const [dlgVisible, setDlgVisible] = useState(false)
+  const [errorInForm, setErrorInForm] = useState(false)
+  const [errorMessage, setErrorMessage] = useState([])
 
 
   const { navigation } = props
@@ -52,25 +55,26 @@ export default function Login(props) {
       {
         "form": email,
         "formName": "E-mail",
-        "message": "E-mail deve conter ao menos 6 caracteres!",
-        "rule": (email < 6)
+        "message": "Deve conter ao menos 6 caracteres!",
+        "rule": (email.length < 6)
       }
       ,
       {
         "form": pass,
         "formName": "Senha",
-        "message": "Senha deve conter ao menos 6 caracteres!",
-        "rule": (pass < 6)
+        "message": "Deve conter ao menos 6 caracteres!",
+        "rule": (pass.length < 6)
       }
     ]
   }
 
   const validateCredentials = async () => {
     reminder()
+    let forms = formObject()
+    let { haveError, listOfErrors } = formValidator(forms)
 
-    let {haveError, listOfErrors} = formValidator(formObject())
 
-    if (haveError) {
+    if (!haveError) {
       try {
         setSubmitDisable(true)
         await AuthenticationProvider.validateUser(email, pass)
@@ -79,18 +83,19 @@ export default function Login(props) {
 
       } catch (error) {
         setSubmitDisable(false)
-        console.log(error)
-        Alert.alert("Erro ao fazer login: " + error)
+        setDlgVisible(true)
+        setErrorInForm(true)
+        setErrorMessage([{"id": 10, "message": "Resultado: erro ao login: " + error}])
       }
 
     } else {
-      
+      setDlgVisible(true)
+      setErrorInForm(true)
+      setErrorMessage(listOfErrors)
+
     }
   }
 
-  // const verifyForm = () => {
-
-  // }
 
   return (
     <View style={[Styles.container, Styles.centralize]}>
@@ -158,7 +163,17 @@ export default function Login(props) {
           </Text>
 
         </View>
+
       </View>
+
+      <StatusDialog
+        visible={dlgVisible}
+        isSucess={!errorInForm}
+        content={errorMessage}
+        disableFunction={() => setDlgVisible(false)}
+      >
+
+      </StatusDialog>
     </View>
   )
 }
