@@ -36,7 +36,7 @@ export default function Sobre(props) {
                 </Text>
             </View>
 
-            <View style={Styles.buttonContainer}>
+            <View style={[Styles.buttonContainer, {flex:2}]}>
                 <Text style={Styles.textLarge}>
                     Modo utilizado: Expo
                 </Text>
