@@ -38,5 +38,6 @@ O aplicativo APPIL trata-se de um app mobile com o objetivo de cadastrar remédi
 ![Tela FAQ](https://user-images.githubusercontent.com/58514930/174134373-d604691e-d3a6-461f-a550-4db98d4125cc.png)
 
 #### SOBRE - Tela contendo as informações dos envolvidos no projeto e do modo utilizado na aplicação, acessível pela opção "Mais informações" pelo menu.
-![Tela Sobre](https://user-images.githubusercontent.com/58514930/174134811-c1f8eaa1-f6de-48fd-ae0e-acd62455048d.png)
+![Tela Sobre](https://user-images.githubusercontent.com/58514930/174409964-dc355a77-f57d-451f-a094-e52b872e8b2b.png)
+
 
