@@ -27,8 +27,9 @@ O aplicativo APPIL trata-se de um app mobile com o objetivo de cadastrar remédi
 ![Erro Cadastro](https://user-images.githubusercontent.com/58514930/174133768-c16f5280-d255-444d-92c4-0136cd8c22fe.png)
 
 #### Farmácias - Tela onde é aberto o mapa e indicado onde estão localizadas as farmácias cadastradas. Clicando em cada farmárcia é possível ver os remédios registrados em cada uma.
-
-XXXXX
+![Mapa Farmácias](https://user-images.githubusercontent.com/58514930/174309619-952ffe2f-d979-4348-98e6-985d68a7430b.png)
+![Farmácias Sem Remédios](https://user-images.githubusercontent.com/58514930/174309685-130583d3-1ba2-4121-878c-7f1162727708.png)
+(![Farmácias Remédios](https://user-images.githubusercontent.com/58514930/174309756-8c3c44f4-f579-4edb-8b48-58d6c1a96573.png)
 
 #### Produtos - Tela contendo os remédios cadastrados pelo usuário, sendo possível deletar ou realizar a edição dos mesmos.
 ![Tela Produtos](https://user-images.githubusercontent.com/58514930/174134036-1e995034-aa1c-4a24-a3d0-13a7dd2aeacd.png)
