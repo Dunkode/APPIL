@@ -1,6 +1,7 @@
 # APPIL
 
 Aplicativo desenvolvido para o trabalho final da matéria Tópicos Especiais em Computação - IMED/Passo Fundo.
+Integrantes: Éderson Vidal Junior e Eduardo Bido
 
 ### Sobre
 
