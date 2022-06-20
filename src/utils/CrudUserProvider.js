@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { collection, addDoc, getDocs, deleteDoc, doc, query, where, getFirestore, setDoc } from 'firebase/firestore'
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
 
 import firebaseConfig from "../config/firebase-auth.json"
 
