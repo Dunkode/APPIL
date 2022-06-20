@@ -2,6 +2,8 @@
 
 Aplicativo desenvolvido para o trabalho final da matéria Tópicos Especiais em Computação - IMED/Passo Fundo.
 
+Integrantes: Éderson Vidal Junior e Eduardo Bido
+
 ### Sobre
 
 O aplicativo APPIL trata-se de um app mobile com o objetivo de cadastrar remédios e seus respectivos valores, indicando em quais farmácias eles estão disponíveis.
