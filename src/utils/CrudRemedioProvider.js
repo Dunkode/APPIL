@@ -88,8 +88,8 @@ export const deleteRemedio = (remedio) => {
             initializeApp(firebaseConfig)
             const db = getFirestore()
 
-            const docId = await deleteDoc(doc(db, "tblremedio", remedio.id))
-            resolve(docId)
+            await deleteDoc(doc(db, "tblremedio", remedio.id))
+            resolve()
         } catch (error) {
             reject(error)
         }

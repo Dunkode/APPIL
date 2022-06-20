@@ -41,7 +41,7 @@ export default function Sobre(props) {
                     Modo utilizado: Expo
                 </Text>
                 <Text style={Styles.textMinor}>
-                    O Expo trás uma enorme facilidade no quesito de testes do que está sendo desenvolvido, por permitir roda-lo no celular e na Web ao mesmo tempo e sem necessidade de cabos.
+                    O Expo trás uma enorme facilidade no quesito de testes do que está sendo desenvolvido, por permitir rodá-lo no celular e na Web ao mesmo tempo e sem necessidade de cabos.
                 </Text>
             </View>
 

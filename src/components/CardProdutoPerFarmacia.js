@@ -1,6 +1,5 @@
 import { View, Text, Alert } from 'react-native'
 import React from 'react'
-import { Button } from 'react-native-paper'
 
 import Styles from '../components/StyleComponent'
 import { Image } from '@rneui/themed/dist/Image'
@@ -16,7 +15,7 @@ export default function CardProdutoPerFarmacia(props) {
 
     const deletarRemedio = (remedio) => {
         deleteRemedio(remedio)
-        .then((item) => Alert.alert("Remédio " + item.nome + " exluído com sucesso!"))
+        .then(() => Alert.alert("Remédio " + remedio.nomeGenerico + " excluído com sucesso!"))
         .catch((error) => Alert.alert("Erro ao deletar remédio:\n" + error))
     }
 

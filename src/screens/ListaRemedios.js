@@ -1,4 +1,4 @@
-import { View, FlatList, Alert } from 'react-native'
+import { View, FlatList } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 
 import Styles from '../components/StyleComponent'
